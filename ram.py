@@ -1,5 +1,7 @@
+from multiprocessing.connection import wait
 import simpy
 import random
+import time
 
 def proceso(nombre, env, memoria, cpu, llegada, cantidad_instrucciones, cantidad_ram):
 
@@ -52,11 +54,11 @@ def proceso(nombre, env, memoria, cpu, llegada, cantidad_instrucciones, cantidad
     print('Tiempo total %d' % (env.now - tiempo_llegada))
 
 
-random.seed(10)
+random.seed(89)
 env = simpy.Environment()  # crear ambiente de simulacion
-initial_ram = simpy.Container(env, 30, init=30)  # crea el container de la ram
-initial_cpu = simpy.Resource(env, capacity=1)  # se crea el procesador con capacidad establecida
-initial_procesos = 50  # cantidad de procesos a generar
+initial_ram = simpy.Container(env, 200, init=200)  # crea el container de la ram
+initial_cpu = simpy.Resource(env, capacity=50)  # se crea el procesador con capacidad establecida
+initial_procesos = 200  # cantidad de procesos a generar
 tiempo_total = 0
 
 for i in range(initial_procesos):
@@ -64,6 +66,7 @@ for i in range(initial_procesos):
     cantidad_instrucciones = random.randint(1, 10)  # cantidad de operaciones por proceso
     UsoRam = random.randint(1, 10)  # cantidad de ram que requiere cada proceso
     env.process(proceso('proceso %d' % i, env, initial_ram, initial_cpu, llegada, cantidad_instrucciones, UsoRam))
+    
 
 # correr la simulacion
 env.run()
